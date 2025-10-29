@@ -3,8 +3,8 @@ from Oop.College import College
 
 class StudentDetail(College):
     def __init__(self,ccode,cname,rollno,sname,m1,m2,m3):
-        super().__init__(ccode,cname)
-        super().display()
+        College.__init__(self,ccode,cname)
+        # super().display()
         self.rollno=rollno
         self.sname=sname
         self.m1=m1
