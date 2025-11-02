@@ -72,8 +72,8 @@ of the larger array.
 
 Vectorized Operations
 Vectorized operations in NumPy allow you to perform batch operations
- on data without writing explicit loops, leading to more concise 
- and faster code.
+on data without writing explicit loops, leading to more concise 
+and faster code.
 
 Array Sorting and Searching
 NumPy provides efficient functions for sorting and searching arrays.
