@@ -6,7 +6,7 @@ def function_Name(x):   #x=> is argument
 
 Arguments types
 Positional Arguments:-Must be passed in the correct order
-Keyword Arguments:-Passed using parameter names
+Keyword Arguments:-Passed using parameter names along with its value
 Default Arguments:-Have a default value if not provided
 Arbitary arguments:-Used when you don’t know how many arguments will be passed. (*x)
 
