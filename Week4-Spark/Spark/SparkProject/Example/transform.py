@@ -2,16 +2,20 @@ from pyspark.sql import SparkSession
 
 import sys
 import os
+
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+
 os.environ["JAVA_HOME"] = "C:/Program Files/Java/jdk-21"
 os.environ["SPARK_HOME"] = "C:/Users/Shree/OneDrive/Desktop/Training Folder/Week4-Spark/Spark/SparkProject/.venv/Lib/site-packages/pyspark"
+os.environ["HADOOP_HOME"]="C:/Hadoop"
 os.environ['PYSPARK_PYTHON'] = sys.executable
 os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
 
-spark = SparkSession.builder \
-    .appName("CreateRDDExample") \
-    .getOrCreate()
+# spark = SparkSession.builder \
+#     .appName("CreateRDDExample") \
+#     .getOrCreate()
 
-sc=spark.sparkContext
+# sc=spark.sparkContext
 
 # numbers=[1,3,10,54,22]
 # rdd=sc.parallelize(numbers)
@@ -31,14 +35,36 @@ sc=spark.sparkContext
 
 # --------------------------------------------------------------------------
 # How to read external file
-stopwords = ["is", "a", "the", "and", "of"]
-b_stop = spark.sparkContext.broadcast(stopwords)
+# stopwords = ["is", "a", "the", "and", "of"]
+# b_stop = spark.sparkContext.broadcast(stopwords)
+#
+# rdd = spark.sparkContext.textFile("../data/article.txt")
+# words = rdd.flatMap(lambda x: x.lower().split())
+# filtered = words.filter(lambda w: w not in b_stop.value)
+# pairs = filtered.map(lambda w: (w, 1))
+# wordCount = pairs.reduceByKey(lambda a, b: a + b)
+#  wordCount.saveAsTextFile("../output/wordcount")
+# print(wordCount.collect())
 
-rdd = spark.sparkContext.textFile("../data/article.txt")
-words = rdd.flatMap(lambda x: x.lower().split())
-filtered = words.filter(lambda w: w not in b_stop.value)
-pairs = filtered.map(lambda w: (w, 1))
-wordCount = pairs.reduceByKey(lambda a, b: a + b)
+# Acceesing the json file
 
-# wordCount.saveAsTextFile("../output/wordcount")
-print(wordCount.collect())
+
+spark = SparkSession.builder \
+    .appName("CreateRDDExample") \
+    .getOrCreate()
+sc=spark.sparkContext
+schema=StructType([
+    StructField("name",StringType(),True),
+    StructField("age",IntegerType(),True),
+    StructField("_corrupt_record",StringType(),True)
+])
+df=spark.read.option("multiline", "true").json("../data/file.json")
+df.show()
+df.printSchema()
+
+
+df.createOrReplaceTempView("people")
+spark.sql("Select name from people where age>28").show()
+
+df.write.mode("overwrite").json("../data/output.json")
+
